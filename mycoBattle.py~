@@ -31,7 +31,7 @@ def resetBlock(blocker):
 
 
 moveName = ["bopped", "shmacked", "dropped", "folded", "clapped"]
-moveLog = ""
+moveLog = []
 
 
 def playerAttack(attacker, attackee):
@@ -67,11 +67,7 @@ while goldenTeacher.hp > 0 and albinoAPlus.hp > 0:
    swung = False
    mycoUser = []
    possibleMoves = ["attack", "taunt", "block"]
-   if moveLog == "attack":
-      agentMeneuver = random.choices(possibleMoves, weights = [5, 5, 10], k = 1)
-   else:
-      agentMeneuver = random.choices(possibleMoves, weights = [10, 5, 5], k = 1)
-      
+   agentMeneuver = random.choices(possibleMoves, weights = [10, 5, 5], k = 1)
    
    print("\n" + goldenTeacher.name + ": " + str(round(goldenTeacher.hp, 2)) + "hp | (@ " + \
       str(goldenTeacher.onions) + " onion(s)\n" + albinoAPlus.name + ": " + str(round(albinoAPlus.hp, 2)) + "hp | (@ " + str(albinoAPlus.onions) + " onion(s)\n")
@@ -83,16 +79,16 @@ while goldenTeacher.hp > 0 and albinoAPlus.hp > 0:
    if melee == "e":
       print("You Attacked!")
       swung = True
-      moveLog = possibleMoves[0]
+      mycoUser.append(possibleMoves[0])
       # playerAttack(goldenTeacher, albinoAPlus)
    elif melee == "q":
       print("You Taunted!")
       playerTaunt(goldenTeacher)
-      moveLog = possibleMoves[1]
+      mycoUser.append(possibleMoves[1])
    elif melee == "f":
       print("You Blocked!")
       playerBlock(goldenTeacher)
-      moveLog = possibleMoves[2]
+      mycoUser.append(possibleMoves[2])
    else:
      print("ERRRORRR!!")
      break
@@ -108,7 +104,7 @@ while goldenTeacher.hp > 0 and albinoAPlus.hp > 0:
    if agentMeneuver == ["attack"]:
       if swung == True:
          playerAttack(goldenTeacher, albinoAPlus)
-         # time.sleep(1)
+         time.sleep(1)
       playerAttack(albinoAPlus, goldenTeacher)
    elif agentMeneuver == ["taunt"]:
       if swung == True:
@@ -136,6 +132,4 @@ elif albinoAPlus.onions <= goldenTeacher.onions:
 
 #for z in range(len(mycoUser)):
     #print(mycoUser[z])
-# print(len(mycoUser))
-# print(mycoUser[0])
-
+print(len(mycoUser))
