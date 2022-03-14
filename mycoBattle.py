@@ -4,22 +4,22 @@ import time
 from termcolor import colored
 
 
-class goldenTeacher:
-   name = "Golden Teacher"
+class portobello:
+   name = "Portobello"
    hp = 300
    hitPoints = 0
    taunt = "idiot! fool!"
    block = False
-   onions = 0
+   spores = 0
  
   
-class albinoAPlus:
-   name = "Albino A+"
+class morel:
+   name = "Morel"
    hp = 325
    hitPoints = 0
    taunt = "trash!"
    block = False
-   onions = 0
+   spores = 0
 
 
 def playerBlock(blocker):
@@ -36,46 +36,51 @@ moveLog = ""
 
 
 def playerAttack(attacker, attackee):
-   if attacker.name == "Golden Teacher":
+   if attacker.name == "Portobello":
       if attackee.block == True:
          attacker.hitPoints = round(random.randint(40, 70) / 4, 2)
          attackee.hp = attackee.hp - attacker.hitPoints
       else:
          attacker.hitPoints = random.randint(40, 70)
          attackee.hp = attackee.hp - attacker.hitPoints
-         attackee.onions = attackee.onions - 1
-   elif attacker.name == "Albino A+":
+         attackee.spores = attackee.spores - 1
+   elif attacker.name == "Morel":
       if attackee.block == True:
          attacker.hitPoints = round(random.randint(25, 85) / 4, 2)
          attackee.hp = attackee.hp - attacker.hitPoints
       else:
          attacker.hitPoints = random.randint(25, 85)
          attackee.hp = attackee.hp - attacker.hitPoints
-         attackee.onions = attackee.onions - 1
+         attackee.spores = attackee.spores - 1
    print("[*]" + attacker.name + " " + str(random.choice(moveName)) + " " + attackee.name + ":" + colored(" -" + str(attacker.hitPoints), 'red'))
 
 
 def playerTaunt(taunter):
-   taunter.onions = taunter.onions + 2
+   taunter.spores = taunter.spores + 2
    print("[!]" + taunter.name + ": " + taunter.taunt)
       
 
-print("Use the keys to battle the agent. Taunt to gain onions[(@]. Get hit and lose an onion.\nBlock to prevent losing onions and weaken the hit. Winner of the fight gets rewarded 2 onions.\nThe side with most onions at the end of the game wins.\n")
+print("Taunt to gain spores[(@]. Get hit and lose a spore." +
+   "\nBlock to prevent losing spores and weaken the enemy's hit. Winner of the battle gets rewarded 2 spores." +
+   "\nThe player with most spores at the end of the game wins.\n")
 
-while goldenTeacher.hp > 0 and albinoAPlus.hp > 0:
-   resetBlock(goldenTeacher)
-   resetBlock(albinoAPlus)
+print("*Reminder*: The player with the most spores wins the game. Not the player that wins the battle.")
+
+while portobello.hp > 0 and morel.hp > 0:
+   resetBlock(portobello)
+   resetBlock(morel)
    swung = False
    mycoUser = []
-   possibleMoves = ["attack", "taunt", "block"]
+   possibleMoves = ["Attacked", "Taunted", "Blocked"]
    if moveLog == "attack":
-      agentMeneuver = random.choices(possibleMoves, weights = [5, 5, 10], k = 1)
+      compMeneuver = random.choices(possibleMoves, weights = [5, 5, 10], k = 1)
    else:
-      agentMeneuver = random.choices(possibleMoves, weights = [10, 5, 5], k = 1)
+      compMeneuver = random.choices(possibleMoves, weights = [10, 5, 5], k = 1)
       
    
-   print("\n" + goldenTeacher.name + ": " + colored(str(round(goldenTeacher.hp, 2)), 'green') + " hp | (@ " + \
-      colored(str(goldenTeacher.onions), 'yellow') + " onion(s)\n" + albinoAPlus.name + ": " + colored(str(round(albinoAPlus.hp, 2)), 'green') + " hp | (@ " + colored(str(albinoAPlus.onions), 'yellow') + " onion(s)\n")
+   print("\n" + portobello.name + ": " + colored(str(round(portobello.hp, 2)), 'green') + " hp | " + \
+      colored(str(portobello.spores), 'yellow') + " spores(s) (@\n" + morel.name + ": " + colored(str(round(morel.hp, 2)), 'green') +
+      " hp | " + colored(str(morel.spores), 'yellow') + " spores(s) (@\n")
    
    melee = input("Press 'q' to taunt, 'f' to block, or 'e' to attack! -> ")
    print("\nBATTLING...")
@@ -85,14 +90,13 @@ while goldenTeacher.hp > 0 and albinoAPlus.hp > 0:
       print("You Attacked!")
       swung = True
       moveLog = possibleMoves[0]
-      # playerAttack(goldenTeacher, albinoAPlus)
    elif melee == "q":
       print("You Taunted!")
-      playerTaunt(goldenTeacher)
+      playerTaunt(portobello)
       moveLog = possibleMoves[1]
    elif melee == "f":
       print("You Blocked!")
-      playerBlock(goldenTeacher)
+      playerBlock(portobello)
       moveLog = possibleMoves[2]
    else:
      print("ERRRORRR!!")
@@ -100,43 +104,39 @@ while goldenTeacher.hp > 0 and albinoAPlus.hp > 0:
 
 
    time.sleep(1)
-   print("Albino A+ " + agentMeneuver[0] + "s!")
+   print("Morel " + compMeneuver[0] + "!")
    time.sleep(1)
    
 
-   # player block is too late to block the agents attack ----------------------------------[FIXED]
    print("________________RESULTS_________________")
-   if agentMeneuver == ["attack"]:
+   if compMeneuver == ["Attacked"]:
       if swung == True:
-         playerAttack(goldenTeacher, albinoAPlus)
+         playerAttack(portobello, morel)
          # time.sleep(1)
-      playerAttack(albinoAPlus, goldenTeacher)
-   elif agentMeneuver == ["taunt"]:
+      playerAttack(morel, portobello)
+   elif compMeneuver == ["Taunted"]:
       if swung == True:
-         playerAttack(goldenTeacher, albinoAPlus)
-      playerTaunt(albinoAPlus)
-   elif agentMeneuver == ["block"]:
-      if swung == True:
-         playerBlock(albinoAPlus)
-         playerAttack(goldenTeacher, albinoAPlus)
+         playerAttack(portobello, morel)
+      playerTaunt(morel)
+   elif compMeneuver == ["Blocked"] and swung == True:
+      playerBlock(morel)
+      playerAttack(portobello, morel)
 
 
-if goldenTeacher.hp <= albinoAPlus.hp:
-   albinoAPlus.onions = albinoAPlus.onions + 2
-elif albinoAPlus.hp <= goldenTeacher.hp:
-   goldenTeacher.onions = goldenTeacher.onions + 2
+
+
+
+if portobello.hp <= morel.hp:
+   morel.spores = morel.spores + 2
+elif morel.hp <= portobello.hp:
+   portobello.spores = portobello.spores + 2
 
     
-if albinoAPlus.onions == goldenTeacher.onions:
+if morel.spores == portobello.spores:
    print("DRAW!!")
-elif goldenTeacher.onions <= albinoAPlus.onions:
-   print("[+]" + albinoAPlus.name + " WINS with " + str(albinoAPlus.onions) + " onions!!")
-elif albinoAPlus.onions <= goldenTeacher.onions:
-   print("[+]" + goldenTeacher.name + " WINS with " + str(goldenTeacher.onions) + " onions!!")
+elif portobello.spores <= morel.spores:
+   print("[+]" + morel.name + " WINS with " + str(morel.spores) + " spores!!")
+elif morel.spores <= portobello.spores:
+   print("[+]" + portobello.name + " WINS with " + str(portobello.spores) + " spores!!")
 
-
-#for z in range(len(mycoUser)):
-    #print(mycoUser[z])
-# print(len(mycoUser))
-# print(mycoUser[0])
 
