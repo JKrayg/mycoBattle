@@ -1,5 +1,3 @@
-from shutil import move
-import cv2
 import random
 import time
 from termcolor import colored
@@ -44,6 +42,9 @@ moveLog = ""
 def playerAttack(attacker, attackee):
    if attacker.name == "Portobello":
       if attackee.block == True:
+         if(attacker.spores > 0):
+            attackee.spores = attackee.spores + 1
+            attacker.spores = attacker.spores - 1
          attacker.hitPoints = round(random.randint(40, 70) / 4, 2)
          attackee.hp = attackee.hp - attacker.hitPoints
       else:
@@ -52,6 +53,9 @@ def playerAttack(attacker, attackee):
          attackee.spores = attackee.spores - 1
    elif attacker.name == "Morel":
       if attackee.block == True:
+         if(attacker.spores > 0):
+            attackee.spores = attackee.spores + 1
+            attacker.spores = attacker.spores - 1
          attacker.hitPoints = round(random.randint(25, 85) / 4, 2)
          attackee.hp = attackee.hp - attacker.hitPoints
       else:
@@ -64,14 +68,15 @@ def playerAttack(attacker, attackee):
 
 
 def playerTaunt(taunter):
-   taunter.spores = taunter.spores + 2
+   taunter.spores = taunter.spores + 1
    print("[!]" + taunter.name + ": " + taunter.taunt)
       
 
 
 
 print("Taunt to gain spores[(@]. Landing attacks will cause the player to lose a spore and hp." +
-   "Blocking attacks will prevent the player from losing a spore and weakens the enemy's hit. " +
+   "Blocking attacks will not only prevent the player from losing a spore, but the player will take" +
+   "one of the enemy's spores and weaken the hit. " +
    "\nWinner of the battle gets rewarded 3 spores." +
    "\nThe player with the most spores at the end of the game wins.\n")
 
@@ -85,13 +90,13 @@ while portobello.hp > 0 and morel.hp > 0:
    possibleMoves = ["Attacked", "Taunted", "Blocked"]
 
    if moveLog == "Attacked":
-      compMeneuver = random.choices(possibleMoves, weights = [7, 10, 3], k = 1)
+      compMeneuver = random.choices(possibleMoves, weights = [10, 10, 3], k = 1)
    elif moveLog == "Taunted":
-      compMeneuver = random.choices(possibleMoves, weights = [10, 5, 7], k = 1)
+      compMeneuver = random.choices(possibleMoves, weights = [10, 10, 2], k = 1)
    elif moveLog == "Blocked":
-      compMeneuver = random.choices(possibleMoves, weights = [10, 3, 5], k = 1)
+      compMeneuver = random.choices(possibleMoves, weights = [10, 5, 5], k = 1)
    else:
-      compMeneuver = random.choices(possibleMoves, weights = [7, 5, 10], k = 1)
+      compMeneuver = random.choices(possibleMoves, weights = [10, 5, 10], k = 1)
       
    
    print("\n" + portobello.name + ": " + colored(str(round(portobello.hp, 2)), 'green') + " hp | " + \
@@ -110,6 +115,7 @@ while portobello.hp > 0 and morel.hp > 0:
       moveLog = possibleMoves[0]
    elif melee == "q":
       print("You Taunted!")
+      time.sleep(1)
       playerTaunt(portobello)
       moveLog = possibleMoves[1]
    elif melee == "f":
@@ -117,7 +123,7 @@ while portobello.hp > 0 and morel.hp > 0:
       playerBlock(portobello)
       moveLog = possibleMoves[2]
    else:
-     print("ERRRORRR!!")
+     print("Exit")
      break
 
 
@@ -126,7 +132,6 @@ while portobello.hp > 0 and morel.hp > 0:
    time.sleep(1)
    
 
-   print("________________RESULTS_________________")
    if compMeneuver == ["Attacked"]:
       if swung == True:
          playerAttack(portobello, morel)
@@ -152,10 +157,10 @@ elif morel.hp <= portobello.hp:
 
     
 if morel.spores == portobello.spores:
-   print("DRAW!!")
+   print("Draw")
 elif portobello.spores <= morel.spores:
-   print("[+]" + morel.name + " WINS with " + str(morel.spores) + " spores!!")
+   print("[+]" + morel.name + " WINS with " + str(morel.spores) + " spores!")
 elif morel.spores <= portobello.spores:
-   print("[+]" + portobello.name + " WINS with " + str(portobello.spores) + " spores!!")
+   print("[+]" + portobello.name + " WINS with " + str(portobello.spores) + " spores!")
 
 
