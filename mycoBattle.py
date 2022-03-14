@@ -1,3 +1,4 @@
+from shutil import move
 import cv2
 import random
 import time
@@ -24,15 +25,20 @@ class morel:
 
 def playerBlock(blocker):
    blocker.block = True
-   print(blocker.name + " blocked!")
+
+
 
    
 def resetBlock(blocker):
    blocker.block = False
 
 
+
+
 moveName = ["bopped", "shmacked", "dropped", "folded", "clapped"]
 moveLog = ""
+
+
 
 
 def playerAttack(attacker, attackee):
@@ -55,16 +61,21 @@ def playerAttack(attacker, attackee):
    print("[*]" + attacker.name + " " + str(random.choice(moveName)) + " " + attackee.name + ":" + colored(" -" + str(attacker.hitPoints), 'red'))
 
 
+
+
 def playerTaunt(taunter):
    taunter.spores = taunter.spores + 2
    print("[!]" + taunter.name + ": " + taunter.taunt)
       
 
-print("Taunt to gain spores[(@]. Get hit and lose a spore." +
-   "\nBlock to prevent losing spores and weaken the enemy's hit. Winner of the battle gets rewarded 2 spores." +
-   "\nThe player with most spores at the end of the game wins.\n")
 
-print("*Reminder*: The player with the most spores wins the game. Not the player that wins the battle.")
+
+print("Taunt to gain spores[(@]. Landing attacks will cause the player to lose a spore and hp." +
+   "Blocking attacks will prevent the player from losing a spore and weakens the enemy's hit. " +
+   "\nWinner of the battle gets rewarded 3 spores." +
+   "\nThe player with the most spores at the end of the game wins.\n")
+
+
 
 while portobello.hp > 0 and morel.hp > 0:
    resetBlock(portobello)
@@ -72,20 +83,27 @@ while portobello.hp > 0 and morel.hp > 0:
    swung = False
    mycoUser = []
    possibleMoves = ["Attacked", "Taunted", "Blocked"]
-   if moveLog == "attack":
-      compMeneuver = random.choices(possibleMoves, weights = [5, 5, 10], k = 1)
+
+   if moveLog == "Attacked":
+      compMeneuver = random.choices(possibleMoves, weights = [7, 10, 3], k = 1)
+   elif moveLog == "Taunted":
+      compMeneuver = random.choices(possibleMoves, weights = [10, 5, 7], k = 1)
+   elif moveLog == "Blocked":
+      compMeneuver = random.choices(possibleMoves, weights = [10, 3, 5], k = 1)
    else:
-      compMeneuver = random.choices(possibleMoves, weights = [10, 5, 5], k = 1)
+      compMeneuver = random.choices(possibleMoves, weights = [7, 5, 10], k = 1)
       
    
    print("\n" + portobello.name + ": " + colored(str(round(portobello.hp, 2)), 'green') + " hp | " + \
       colored(str(portobello.spores), 'yellow') + " spores(s) (@\n" + morel.name + ": " + colored(str(round(morel.hp, 2)), 'green') +
       " hp | " + colored(str(morel.spores), 'yellow') + " spores(s) (@\n")
    
+
    melee = input("Press 'q' to taunt, 'f' to block, or 'e' to attack! -> ")
    print("\nBATTLING...")
    time.sleep(1.5)
    
+
    if melee == "e":
       print("You Attacked!")
       swung = True
@@ -126,8 +144,9 @@ while portobello.hp > 0 and morel.hp > 0:
 
 
 
+
 if portobello.hp <= morel.hp:
-   morel.spores = morel.spores + 2
+   morel.spores = morel.spores + 3
 elif morel.hp <= portobello.hp:
    portobello.spores = portobello.spores + 2
 
